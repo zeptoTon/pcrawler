@@ -1,0 +1,47 @@
+{
+  "filename" : "sainsbury.json",
+  "user_agent" : "trail crawler from Tony Li",
+  "document_url" : "http://hiring-tests.s3-website-eu-west-1.amazonaws.com/2015_Developer_Scrape/5_products.html",
+  "items_css_path": ".productLister > li",
+  "lookup_properties" : [
+    {
+      "type" : "text",
+      "name" : "title",
+      "multiple" : false,
+      "format" : "string",
+      "css_path" : ".productInfo > h3:nth-of-type(1) > a:nth-of-type(1)"
+    },
+    {
+      "type" : "link",
+      "css_path" : ".productInfo > h3:nth-of-type(1) > a:nth-of-type(1)",
+      "nested_properties" : [
+        {
+          "type" : "sizeof",
+          "name" : "size",
+          "format" : "string"
+        },
+        {
+          "type" : "text",
+          "name" : "description",
+          "multiple" : true,
+          "format" : "string",
+          "css_path" : "#information > productcontent > htmlcontent > div:nth-of-type(1) > p"
+        }
+      ]
+    },
+    {
+      "type" : "text",
+      "name" : "unit_price",
+      "multiple" : false,
+      "format" : "number",
+      "css_path" : "div.pricing > p:nth-of-type(1)"
+    }
+  ],
+  "reducers" : [
+    {
+      "type" : "sum",
+      "name" : "total",
+      "key" : "unit_price"
+    }
+  ]
+}

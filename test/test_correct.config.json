@@ -1,0 +1,47 @@
+{
+  "filename" : "test/test_sainsbury.json",
+  "user_agent" : "trail crawler from Tony Li",
+  "document_url" : "http://example.com",
+  "items_css_path": ".productLister > li",
+  "lookup_properties" : [
+    {
+      "type" : "text",
+      "name" : "title",
+      "multiple" : false,
+      "format" : "string",
+      "css_path" : "p#title"
+    },
+    {
+      "type" : "link",
+      "css_path" : "a",
+      "nested_properties" : [
+        {
+          "type" : "sizeof",
+          "name" : "size",
+          "format" : "string"
+        },
+        {
+          "type" : "text",
+          "name" : "description",
+          "multiple" : true,
+          "format" : "string",
+          "css_path" : "div.description > p"
+        }
+      ]
+    },
+    {
+      "type" : "text",
+      "name" : "unit_price",
+      "multiple" : false,
+      "format" : "number",
+      "css_path" : "p#unit_price"
+    }
+  ],
+  "reducers" : [
+    {
+      "type" : "sum",
+      "name" : "total",
+      "key" : "unit_price"
+    }
+  ]
+}
