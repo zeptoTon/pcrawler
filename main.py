@@ -45,7 +45,7 @@ class Crawler:
                 return '\n'.join([x.text.strip() for x in els])
             else:
                 if value_format == "number":
-                    price = re.findall("[-+]?\d+[\.]?\d*", els[0].text.strip())
+                    price = re.findall(r"[-+]?\d+[\.]?\d*", els[0].text.strip())
                     return float(price[0])
                 return els[0].text.strip()
         else:
