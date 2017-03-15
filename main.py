@@ -1,10 +1,10 @@
+""" This file use for running pcrawler, see README.md for detail """
 import sys
+import urllib.request
 from bs4 import BeautifulSoup
 import json
-import urllib.request
 import re
 from functools import reduce
-
 
 class Crawler:
     """

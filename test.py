@@ -1,10 +1,8 @@
+""" This file use for pcrawler unit test, see README.md for detail """
 import unittest
 from unittest.mock import patch, Mock
-import subprocess
-from main import Crawler
-import urllib.request
 import json
-
+from main import Crawler
 
 class TestStringMethods(unittest.TestCase):
     """
