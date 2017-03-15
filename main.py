@@ -42,7 +42,7 @@ class Crawler:
         els = soup.select(css_path)
         if len(els):
             if multiple:
-                return '\n'.join([x.text.strip() for x in els])
+                return '\n'.join([x.text.strip() for x in els]).strip()
             else:
                 if value_format == "number":
                     price = re.findall(r"[-+]?\d+[\.]?\d*", els[0].text.strip())
