@@ -56,9 +56,14 @@ class Crawler:
         a_links = BeautifulSoup(document, "html.parser").select(css_path)
         if len(a_links) > 0:
             url = a_links[0]["href"]
-            content = self.opener.open(url).read()
-            for p in nested_properties:
-                self._content_router(content, p)
+            with self.opener.open(url) as response:
+                content = response.read()
+                for p in nested_properties:
+                    if p["type"] == "sizeof":
+                        self.result[p["name"]] = self._extract_size_node(
+                            response.headers['content-length'])
+                    else:
+                        self._content_router(content, p)
 
     def _content_router(self, document, l_property):
         """ Set the result to instance
@@ -69,24 +74,22 @@ class Crawler:
         if l_property["type"] == "text":
             self.result[l_property["name"]] = self._extract_text_node(
                 document, l_property["css_path"], l_property["format"], l_property["multiple"])
-        elif l_property["type"] == "sizeof":
-            self.result[l_property["name"]] = self._extract_size_node(document)
         elif l_property["type"] == "link":
             self._extract_link_node(
                 document, l_property["css_path"], l_property["nested_properties"])
 
     @staticmethod
-    def _extract_size_node(document):
+    def _extract_size_node(content_length):
         """ return size in kb of target document
         Args:
-          document: content in string
+          content_length: in String from HTTP response header
         Return:
           config: size in kb
         Raise:
           ValueError if document is None
         """
-        if not document is None:
-            return "%.2fkb" % (sys.getsizeof(document) * 8 / 1024)
+        if not content_length == '':
+            return "%.2fkb" % (int(content_length) * 8 / 1024)
         else:
             raise ValueError("Missing document input")
 

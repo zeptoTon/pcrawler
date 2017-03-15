@@ -1,6 +1,6 @@
 """ This file use for pcrawler unit test, see README.md for detail """
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import patch, MagicMock
 import json
 from main import Crawler
 
@@ -25,7 +25,7 @@ class TestStringMethods(unittest.TestCase):
 
     def test_extract_size_node(self):
         """ Test the protected _extract_size_node funtion """
-        self.assertEqual("660.87kb", Crawler._extract_size_node(self.doc))
+        self.assertEqual("306.13kb", Crawler._extract_size_node('39185'))
 
     def test_extract_text_node(self):
         """ Test the protected _extract_text_node funtion """
@@ -45,12 +45,13 @@ class TestStringMethods(unittest.TestCase):
     @patch("urllib.request.OpenerDirector.open")
     def test_extract_link_node(self, mock_open):
         """ Test the protected _extract_link_node funtion """
-        content = Mock()
+        content = MagicMock()
         with open("test/example1.html") as file_content:
             ex1 = file_content.read()
         with open("test/example2.html") as file_content:
             ex2 = file_content.read()
         content.read.side_effect = [ex1, ex2]
+        content.__enter__.return_value = content
         mock_open.return_value = content
         nested_properties = [
             {
@@ -70,7 +71,7 @@ class TestStringMethods(unittest.TestCase):
         " > div > div.productInfoWrapper > div > h3 > a"
 
         expected_result = {
-            "size": "2.05kb",
+            "size": "0.01kb",
             "description": "E\nX\nA\nM\nP\nL\nE\n1",
         }
         self.crawler._extract_link_node(self.doc, css_path, nested_properties)
@@ -80,7 +81,7 @@ class TestStringMethods(unittest.TestCase):
     @patch("urllib.request.OpenerDirector.open")
     def test_start(self, mock_open):
         """ Test the start funtion """
-        content = Mock()
+        content = MagicMock()
         with open("test/example.html") as file_content:
             ex = file_content.read()
         with open("test/example1.html") as file_content:
@@ -88,18 +89,19 @@ class TestStringMethods(unittest.TestCase):
         with open("test/example2.html") as file_content:
             ex2 = file_content.read()
         content.read.side_effect = [ex, ex1, ex2]
+        content.__enter__.return_value = content
         mock_open.return_value = content
         result_content = {
             "results": [
                 {
                     "title":  "Example 1",
-                    "size": "2.05kb",
+                    "size": "0.01kb",
                     "unit_price": 11.11,
                     "description": "E\nX\nA\nM\nP\nL\nE\n1"
                 },
                 {
                     "title":  "Example 2",
-                    "size": "2.05kb",
+                    "size": "0.01kb",
                     "unit_price": 22.22,
                     "description": "E\nX\nA\nM\nP\nL\nE\n2"
                 }
